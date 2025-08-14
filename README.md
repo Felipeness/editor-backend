@@ -53,17 +53,15 @@
 
 ```mermaid
 flowchart LR
-  A["Next.js Frontend\nCKEditor / contentEditable"]
+  A[Next.js Frontend\nCKEditor / contentEditable]
   B[FastAPI]
-  C["Mammoth\n.docx → HTML"]
-  D["python-docx + lxml\nHTML → .docx (custom mapper)"]
-  E["(Memory)"]
+  C[Mammoth: DOCX to HTML]
+  D[python-docx + lxml\nHTML to DOCX]
 
   A -- "POST /docx/import (multipart)" --> B
-  A <-- "POST /docx/export (JSON)" --- B
+  B -- "POST /docx/export (JSON)" --> A
   B --> C
   B --> D
-  B -.-> E
 ```
 
 ## Tech Stack
