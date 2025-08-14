@@ -28,5 +28,5 @@ def add_hyperlink(paragraph: Paragraph, url: str, text: str) -> None:
     run.append(t)
     hyperlink.append(run)
 
-    # Insere o XML nativo no parágrafo
+
     paragraph._p.append(hyperlink)
