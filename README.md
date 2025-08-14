@@ -53,12 +53,17 @@
 
 ```mermaid
 flowchart LR
-  A[Next.js Frontend<br/>CKEditor / contentEditable]
-    -- POST /docx/import (multipart) --> B(FastAPI)
-  A <-- POST /docx/export (JSON) --- B
-  B --> C[Mammoth<br/>.docx → HTML]
-  B --> D[python-docx + lxml<br/>HTML → .docx (custom mapper)]
-  B -.-> E[(Memory)]
+  A["Next.js Frontend\nCKEditor / contentEditable"]
+  B[FastAPI]
+  C["Mammoth\n.docx → HTML"]
+  D["python-docx + lxml\nHTML → .docx (custom mapper)"]
+  E["(Memory)"]
+
+  A -- "POST /docx/import (multipart)" --> B
+  A <-- "POST /docx/export (JSON)" --- B
+  B --> C
+  B --> D
+  B -.-> E
 ```
 
 ## Tech Stack
@@ -168,6 +173,7 @@ curl -X POST "http://127.0.0.1:8000/docx/import" \
 ```
 
 **Next.js (TypeScript)**
+
 ```ts
 const fd = new FormData();
 fd.append("file", file);
@@ -212,6 +218,7 @@ curl -X POST "http://127.0.0.1:8000/docx/export" \
 ```
 
 **Next.js (TypeScript)**
+
 ```ts
 const res = await fetch("http://127.0.0.1:8000/docx/export", {
   method: "POST",
@@ -233,6 +240,7 @@ saveAs(blob, `${title || "document"}.docx`); // e.g. using FileSaver.js
 `app/schemas.py` (pydantic v2):
 
 - **`ImportDocxResponse`**
+
   - `html: str` (sanitized HTML)
   - `metadata: { title?: str, author?: str }`
 
@@ -244,7 +252,7 @@ saveAs(blob, `${title || "document"}.docx`); // e.g. using FileSaver.js
 
 ## Conversion Notes
 
-- **DOCX → HTML**: *Mammoth* prioritizes clean semantic HTML. Some advanced styling may be simplified.
+- **DOCX → HTML**: _Mammoth_ prioritizes clean semantic HTML. Some advanced styling may be simplified.
 - **HTML → DOCX**: The custom mapper in `app/converters/html_to_docx.py` preserves headings, bold/italic, links, lists (including nested), and basic alignment.
   - Headings **inside lists** are supported via a `data-heading` + `.li-text` strategy from the frontend.
   - Numbered lists use a pre‑defined numbering reference (`num`) for consistent output.
